@@ -4,14 +4,15 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import ListPage from "./routes/listPage/listPage";
-import {Layout, RequireAuth } from "./routes/layout/layout";
+import { Layout, RequireAuth } from "./routes/layout/layout";
 import SinglePage from "./routes/singlePage/singlePage";
 import ProfilePage from "./routes/profilePage/profilePage";
 import Login from "./routes/login/login";
 import Register from "./routes/register/register";
+import Listings from "./routes/listings/listings";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
 import NewPostPage from "./routes/newPostPage/newPostPage";
-import { listPageLoader, profilePageLoader, singlePageLoader } from "./lib/loaders";
+import { listPageLoader, profilePageLoader, singlePageLoader, listingsPageLoader } from "./lib/loaders";
 import UpdatePost from "./routes/updatePost/UpdatePost";
 
 
@@ -20,50 +21,55 @@ function App() {
     {
       path: "/",
       element: <Layout />,
-      children:[
+      children: [
         {
-          path:"/",
-          element:<HomePage/>
+          path: "/",
+          element: <HomePage />
         },
         {
-          path:"/list",
-          element:<ListPage/>,
+          path: "/list",
+          element: <ListPage />,
           loader: listPageLoader
         },
         {
-          path:"/:id",
-          element:<SinglePage/>,
+          path: "/:id",
+          element: <SinglePage />,
           loader: singlePageLoader
         },
         {
-          path:"/login",
-          element:<Login/>
+          path: "/login",
+          element: <Login />
         },
         {
-          path:"/register",
-          element:<Register/>
+          path: "/register",
+          element: <Register />
         }
       ]
     },
     {
-      path:"/",
-      element:<RequireAuth />,
+      path: "/",
+      element: <RequireAuth />,
       children: [
         {
-          path:"/profile",
-          element:<ProfilePage/>,
+          path: "/profile",
+          element: <ProfilePage />,
           loader: profilePageLoader
         },
         {
-          path:"/profile/update",
-          element:<ProfileUpdatePage/>
+          path: "/listings",
+          element: <Listings />,
+          loader: listingsPageLoader
         },
         {
-          path:"/add",
-          element: <NewPostPage/>
+          path: "/profile/update",
+          element: <ProfileUpdatePage />
         },
         {
-          path:"/update/post/:id",
+          path: "/add",
+          element: <NewPostPage />
+        },
+        {
+          path: "/update/post/:id",
           element: <UpdatePost />
         },
       ]
@@ -72,7 +78,7 @@ function App() {
 
   return (
 
-    <RouterProvider router={router}/>
+    <RouterProvider router={router} />
   );
 }
 

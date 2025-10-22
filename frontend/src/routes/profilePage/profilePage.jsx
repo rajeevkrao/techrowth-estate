@@ -47,21 +47,6 @@ function ProfilePage() {
             </span>
             <button onClick={handleLogout}>Logout</button>
           </div>
-          <div className="title">
-            <h1>My List</h1>
-            <Link to="/add">
-              <button>Add New Post</button>
-            </Link>
-          </div>
-
-          <Suspense fallback={<p>Loading...</p>}>
-            <Await 
-              resolve ={data.postResponse}
-              errorElement ={<p>Error Loading Posts...</p>}
-            >
-              {(postResponse) => <List posts={postResponse.data.userPosts} />}
-            </Await>
-          </Suspense>
          
           <div className="title">
             <h1>Saved List</h1>

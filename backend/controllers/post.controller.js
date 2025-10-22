@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 export const getPosts = async (req, res) => {
     const query = req.query;
-    
+
     try {
         const posts = await prisma.post.findMany({
             where: {
@@ -18,7 +18,7 @@ export const getPosts = async (req, res) => {
             }
         });
 
-        
+
         res.status(200).json(posts);
 
     } catch (err) {
@@ -96,6 +96,8 @@ export const updatePost = async (req, res) => {
     const id = req.params.id;
     const { formData } = req.body; // Extract formData from the request body
 
+    console.log({ formData: req.body });
+
     if (!formData) {
         return res.status(400).json({ message: "Invalid request format." });
     }
@@ -109,7 +111,7 @@ export const updatePost = async (req, res) => {
         bathroom,
         type,
         property,
-        desc,
+        postDetail: { desc },
     } = formData;
 
     try {
@@ -122,37 +124,48 @@ export const updatePost = async (req, res) => {
             !bedroom ||
             !bathroom ||
             !type ||
-            !property
+            !property ||
+            !desc
         ) {
             return res.status(400).json({ message: "Missing required fields." });
         }
 
-        const updatedPost = await prisma.post.update({
-            where: { id },
-            data: {
-                title,
-                price: parseInt(price),
-                address,
-                city,
-                bedroom: parseInt(bedroom),
-                bathroom: parseInt(bathroom),
-                type,
-                property,
-                postDetail: {
-                    upsert: {
-                        create: { desc },
-                        update: { desc },
-                    },
-                },
+        // Upsert postDetail first, assuming postId is unique in PostDetail schema
+        const postDetailUpsert = await prisma.postDetail.upsert({
+            where: { postId: id },  // Requires @unique([postId]) in schema
+            update: { desc },
+            create: { 
+                desc,
+                post: { connect: { id } }  // Link to post
             },
+        });
+
+        // Update post and connect the postDetail
+        const updatedPost = await prisma.$transaction(async (tx) => {
+            return tx.post.update({
+                where: { id },
+                data: {
+                    title,
+                    price: parseInt(price),
+                    address,
+                    city,
+                    bedroom: parseInt(bedroom),
+                    bathroom: parseInt(bathroom),
+                    type,
+                    property,
+                    postDetail: { connect: { id: postDetailUpsert.id } },
+                },
+                include: { postDetail: true },  // Optional: Include to return updated detail
+            });
         });
 
         res.status(200).json(updatedPost);
     } catch (err) {
         console.error("Error updating post:", err);
-        res.status(500).json({ message: "Failed to update post." });
+        res.status(500).json({ message: "Failed to update post.", error: err.message });
     }
 };
+
 
 export const deletePost = async (req, res) => {
     const id = req.params.id;

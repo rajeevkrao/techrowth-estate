@@ -7,6 +7,14 @@
   .textContainer {
     flex: 3;
 
+    .property-owner {
+      .text {
+        margin-bottom: 1rem;
+      }
+
+      text-align: center;
+    }
+
     .wrapper {
       padding-right: 100px;
       display: flex;
@@ -15,15 +23,15 @@
       gap: 50px;
       height: 100%;
 
-      @include lg{
+      @include lg {
         padding-right: 50px;
       }
 
-      @include md{
+      @include md {
         padding: 0;
       }
 
-      @include sm{
+      @include sm {
         justify-content: flex-start;
       }
 

@@ -1,0 +1,16 @@
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h1 {
+        font-weight: 300;
+    }
+
+    button {
+        padding: 12px 24px;
+        background-color: #93C572;
+        cursor: pointer;
+        border: none;
+    }
+}

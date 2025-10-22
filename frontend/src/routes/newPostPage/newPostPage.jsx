@@ -6,6 +6,8 @@ import UploadWidget from "../../components/uploadWidget/UploadWidget";
 import { useNavigate } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest";
 
+import Button from "../../components/ui/button";
+
 function NewPostPage() {
   const [value, setValue] = useState('');
   const [images, setImages] = useState([]);
@@ -152,6 +154,7 @@ function NewPostPage() {
               <label htmlFor="restaurant">Restaurant</label>
               <input min={0} id="restaurant" name="restaurant" type="number" />
             </div>
+            <Button>Add</Button>
             <button className="sendButton">Add</button>
             {/* {error && <span>{error}</span>} */}
             {error && <span>error</span>}
@@ -164,10 +167,10 @@ function NewPostPage() {
         ))}
         <UploadWidget 
           uwConfig={{
-            cloudName: "sujayraj-boregouda",
-            uploadPreset: "sujay-lama-real-estate",
+            cloudName: "dqslgf2fw",
+            uploadPreset: "real-estate-post-preset",
             multiple: true,
-            folder:"posts"
+            folder:"real-estate-posts"
           }}
           setState={setImages}
           />
