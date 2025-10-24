@@ -14,6 +14,7 @@ import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
 import NewPostPage from "./routes/newPostPage/newPostPage";
 import { listPageLoader, profilePageLoader, singlePageLoader, listingsPageLoader } from "./lib/loaders";
 import UpdatePost from "./routes/updatePost/UpdatePost";
+import PaymentDemo from "./routes/paymentDemo/paymentDemo";
 
 
 function App() {
@@ -32,17 +33,21 @@ function App() {
           loader: listPageLoader
         },
         {
-          path: "/:id",
-          element: <SinglePage />,
-          loader: singlePageLoader
-        },
-        {
           path: "/login",
           element: <Login />
         },
         {
           path: "/register",
           element: <Register />
+        },
+        {
+          path: "/payment-demo",
+          element: <PaymentDemo />
+        },
+        {
+          path: "/:id",
+          element: <SinglePage />,
+          loader: singlePageLoader
         }
       ]
     },
