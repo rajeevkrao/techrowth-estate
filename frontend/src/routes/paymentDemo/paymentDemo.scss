@@ -1,0 +1,234 @@
+.paymentDemo {
+  min-height: 100vh;
+  padding: 50px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .paymentContainer {
+    max-width: 600px;
+    width: 100%;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 32px;
+    }
+
+    .description {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .paymentForm {
+      margin-bottom: 30px;
+
+      .formGroup {
+        margin-bottom: 25px;
+
+        label {
+          display: block;
+          margin-bottom: 8px;
+          color: #333;
+          font-weight: 600;
+          font-size: 14px;
+        }
+
+        input {
+          width: 100%;
+          padding: 12px 15px;
+          border: 2px solid #e0e0e0;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: all 0.3s;
+
+          &:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+          }
+        }
+      }
+
+      .payButton {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-bottom: 15px;
+
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        &:active:not(:disabled) {
+          transform: translateY(0);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .status {
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        animation: slideIn 0.3s ease;
+
+        &.success {
+          background: #d4edda;
+          color: #155724;
+          border: 1px solid #c3e6cb;
+        }
+
+        &.failed {
+          background: #f8d7da;
+          color: #721c24;
+          border: 1px solid #f5c6cb;
+        }
+
+        &.cancelled {
+          background: #fff3cd;
+          color: #856404;
+          border: 1px solid #ffeeba;
+        }
+      }
+    }
+
+    .testInfo {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+
+      h3 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 18px;
+        text-align: center;
+      }
+
+      .testMethod {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border-left: 4px solid #667eea;
+
+        h4 {
+          color: #667eea;
+          margin: 0 0 10px 0;
+          font-size: 15px;
+        }
+
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+
+          li {
+            padding: 5px 0;
+            color: #555;
+            font-size: 13px;
+
+            strong {
+              color: #333;
+            }
+          }
+        }
+      }
+
+      .note {
+        color: #d9534f;
+        font-size: 13px;
+        margin: 15px 0 0 0;
+        padding: 10px;
+        background: #fff3cd;
+        border-radius: 5px;
+        text-align: center;
+
+        strong {
+          color: #856404;
+        }
+      }
+    }
+
+    .features {
+      background: #f0f4ff;
+      padding: 20px;
+      border-radius: 10px;
+
+      h3 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 18px;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          padding: 8px 0;
+          color: #555;
+          font-size: 14px;
+          position: relative;
+          padding-left: 25px;
+
+          &::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .paymentDemo {
+    padding: 20px 15px;
+
+    .paymentContainer {
+      padding: 25px;
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  }
+}
