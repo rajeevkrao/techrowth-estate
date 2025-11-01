@@ -5,20 +5,21 @@ import List from "../../components/list/List";
 import apiRequest from "../../lib/apiRequest";
 import "./profilePage.scss";
 import { AuthContext } from "../../context/AuthContext";
+import Button from "../../components/ui/button";
 
 function ProfilePage() {
   const data = useLoaderData();
-  const {updateUser, currentUser} = useContext(AuthContext);
+  const { updateUser, currentUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-     await apiRequest.post('/auth/logout');
-     updateUser(null); // Clear user in the AuthContext.
-     navigate('/'); 
+      await apiRequest.post('/auth/logout');
+      updateUser(null); // Clear user in the AuthContext.
+      navigate('/');
     } catch (error) {
-       console.log(error);
+      console.log(error);
     }
   }
   return (
@@ -27,9 +28,10 @@ function ProfilePage() {
         <div className="wrapper">
           <div className="title">
             <h1>User Information</h1>
-            <Link to="/profile/update">
-              <button>Update Profile</button>
-            </Link>
+            <div className="buttons">
+              <Button to="/profile/update">Update Profile</Button>
+              <Button to="/listings">My Listings</Button>
+            </div>
           </div>
           <div className="info">
             <span>
@@ -47,15 +49,15 @@ function ProfilePage() {
             </span>
             <button onClick={handleLogout}>Logout</button>
           </div>
-         
+
           <div className="title">
             <h1>Saved List</h1>
           </div>
 
           <Suspense fallback={<p>Loading...</p>}>
-            <Await 
-              resolve ={data.postResponse}
-              errorElement ={<p>Error Loading Posts...</p>}
+            <Await
+              resolve={data.postResponse}
+              errorElement={<p>Error Loading Posts...</p>}
             >
               {(postResponse) => <List posts={postResponse.data.savedPosts} />}
             </Await>
@@ -66,19 +68,19 @@ function ProfilePage() {
       <div className="chatContainer">
         <div className="wrapper">
 
-        <Suspense fallback={<p>Loading...</p>}>
-            <Await 
-              resolve ={data.chatResponse}
-              errorElement ={<p>Error Loading Chats...</p>}
+          <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.chatResponse}
+              errorElement={<p>Error Loading Chats...</p>}
             >
-              {(chatResponse) => <Chat chats={chatResponse.data}/>}
+              {(chatResponse) => <Chat chats={chatResponse.data} />}
             </Await>
           </Suspense>
 
 
         </div>
       </div>
-    </div> 
+    </div>
   );
 }
 

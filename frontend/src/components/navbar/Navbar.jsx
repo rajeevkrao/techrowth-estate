@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { useNotificationStore } from "../../lib/notificationStore";
 
+import Button from "../ui/button";
+
 function Navbar() {
   const [open, setOpen] = useState(false);
 
@@ -12,7 +14,7 @@ function Navbar() {
   const fetch = useNotificationStore((state) => state.fetch);
   const number = useNotificationStore((state) => state.number);
 
-  if(currentUser) fetch();
+  if (currentUser) fetch();
 
   return (
     <nav>
@@ -21,20 +23,24 @@ function Navbar() {
           <img src="/logo.png" alt="" />
           <span>Techrowth Estate</span>
         </a>
-        <a href="/">Home</a>
         <a href="/list">List</a>
-        {/* <a href="/">Contact</a>
-        <a href="/">Agents</a> */}
+        <a href="/pricing">Pricing</a>
       </div>
       <div className="right">
         {currentUser ? (
           <div className="user">
             <img src={currentUser.avatar || "/noavatar.jpg"} alt="" />
             <span>{currentUser.username}</span>
-            <Link to="/profile" className="profile">
-              {number > 0 && <div className="notification">{number}</div>}
+            {/* <Link to="/profile" className="profile">
+
               <span>Profile</span>
-            </Link>
+            </Link> */}
+
+            <Button to="/profile">
+              {number > 0 && <div className="notification">{number}</div>}
+              Profile
+            </Button>
+
           </div>
         ) : (
           <>

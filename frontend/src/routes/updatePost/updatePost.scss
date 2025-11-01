@@ -1,4 +1,4 @@
-.newPostPage {
+.updatePostPage {
     display: flex;
   
     .formContainer {
@@ -58,7 +58,8 @@
       flex: 2;
       background-color: #fcf5f3;
       display: flex;
-      flex-direction: column;
+      overflow-y: scroll;
+      // flex-direction: column;
       gap: 20px;
       align-items: center;
       justify-content: center;

@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest"; // Assuming this handles API requests
 import "./updatePost.scss";
 import ReactQuill from "react-quill";
+import toast from "react-hot-toast";
+
+import Button from "../../components/ui/button";
 
 function UpdatePost() {
   const { id } = useParams();
@@ -92,7 +95,7 @@ function UpdatePost() {
     e.preventDefault();
     try {
       await apiRequest.put(`/posts/${id}`, { formData });
-      alert("Post updated successfully!");
+      toast.success("Post updated successfully!");
       navigate(`/${id}`);
     } catch (err) {
       console.error(err);
@@ -103,7 +106,7 @@ function UpdatePost() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="newPostPage">
+    <div className="updatePostPage">
       <div className="formContainer">
         <h1>Update Post</h1>
         <div className="wrapper">
@@ -266,7 +269,7 @@ function UpdatePost() {
               </div>
             </div>
 
-            <button type="submit">Update Post</button>
+            <Button type="submit">Update Post</Button>
           </form>
         </div>
       </div>

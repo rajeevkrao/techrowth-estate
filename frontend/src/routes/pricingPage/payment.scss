@@ -1,0 +1,51 @@
+.payment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  .paymentContainer {
+    width: 80%;
+    max-width: 1200px;
+    text-align: center;
+
+    h1 {
+      font-size: 48px;
+      margin-bottom: 50px;
+    }
+
+    .plans {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+
+      .plan {
+        background-color: #f9f9f9;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        flex: 0 0 33.333%;
+
+        h2 {
+          font-size: 36px;
+          margin-bottom: 20px;
+        }
+
+        h3 {
+          font-size: 24px;
+          margin-bottom: 20px;
+        }
+
+        ul {
+          list-style: none;
+          padding: 0;
+          margin-bottom: 30px;
+
+          li {
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+  }
+}

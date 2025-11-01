@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import SearchBar from "../../components/searchBar/SearchBar";
 import "./homePage.scss";
 import { AuthContext } from "../../context/AuthContext";
@@ -7,8 +6,6 @@ import { AuthContext } from "../../context/AuthContext";
 import Button from "../../components/ui/button"
 
 function HomePage() {
-
-  const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
 
@@ -25,7 +22,7 @@ function HomePage() {
           <SearchBar />
           <div class="property-owner">
             <div class="text">Are you a property owner?</div>
-            <Button onClick={()=> navigate("/listings")}>Post Free Property Ad</Button>
+            <Button onHoverAnim to="/listings">Post Free Property Ad</Button>
           </div>
           <div className="boxes">
             <div className="box">
@@ -46,7 +43,7 @@ function HomePage() {
       <div className="imgContainer">
         <img src="/bg.png" alt="" />
       </div>
-    </div>
+    </div >
   );
 }
 

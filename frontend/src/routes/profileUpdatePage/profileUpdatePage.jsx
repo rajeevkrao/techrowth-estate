@@ -7,17 +7,17 @@ import UploadWidget from "../../components/uploadWidget/UploadWidget";
 
 function ProfileUpdatePage() {
   const [error, setError] = useState("");
-  const {currentUser, updateUser} = useContext(AuthContext);
+  const { currentUser, updateUser } = useContext(AuthContext);
   const [avatar, setAvatar] = useState([]);
 
   const navigate = useNavigate();
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
 
-    const {username, email, password} = Object.fromEntries(formData);
+    const { username, email, password } = Object.fromEntries(formData);
 
     try {
       const res = await apiRequest.put(`/users/${currentUser.id}`, {
@@ -68,12 +68,12 @@ function ProfileUpdatePage() {
       <div className="sideContainer">
         <img src={avatar[0] || currentUser.avatar || "/noavatar.jpg"} alt="" className="avatar" />
         <UploadWidget uwConfig={{
-            cloudName: "sujayraj-boregouda",
-            uploadPreset: "sujay-lama-real-estate",
-            multiple: false,
-            maxImageFileSize:"2000000",
-            folder:"avatars"
-          }}
+          cloudName: "dqslgf2fw",
+          uploadPreset: "real-estate-post-preset", 
+          multiple: false,
+          maxImageFileSize: "2000000",
+          folder: "avatars"
+        }}
           setState={setAvatar}
         />
       </div>

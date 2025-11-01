@@ -46,7 +46,7 @@ function NewPostPage() {
           restaurant: parseInt(inputs.restaurant)
         }
       });
-      navigate("/"+res.data.id);
+      navigate("/" + res.data.id);
     } catch (err) {
       console.log(err);
       // setError(err);
@@ -57,7 +57,7 @@ function NewPostPage() {
   return (
     <div className="newPostPage">
       <div className="formContainer">
-        <h1 style={{textAlign: "center", margin: " 0  auto" }}>Add New Post</h1>
+        <h1 style={{ textAlign: "center", margin: " 0  auto" }}>Add New Post</h1>
         <div className="wrapper">
           <form onSubmit={handleSubmit}>
             <div className="item">
@@ -155,25 +155,29 @@ function NewPostPage() {
               <input min={0} id="restaurant" name="restaurant" type="number" />
             </div>
             <Button>Add</Button>
-            <button className="sendButton">Add</button>
             {/* {error && <span>{error}</span>} */}
             {error && <span>error</span>}
           </form>
         </div>
       </div>
       <div className="sideContainer">
-        {images.map((image, index) => (
-          <img src={image} key={index} alt="property-images" />
-        ))}
-        <UploadWidget 
+        <UploadWidget
           uwConfig={{
             cloudName: "dqslgf2fw",
             uploadPreset: "real-estate-post-preset",
             multiple: true,
-            folder:"real-estate-posts"
+            folder: "real-estate-posts",
+            value: "dfdfd"
           }}
           setState={setImages}
-          />
+
+        >{images.length ? "Upload More" : "Upload"}
+        </UploadWidget>
+        <div className="images">{images.map((image, index) => (
+          <img src={image} key={index} alt="property-images" />
+        ))}</div>
+
+
       </div>
     </div>
   );

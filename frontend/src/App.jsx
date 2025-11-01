@@ -15,6 +15,7 @@ import NewPostPage from "./routes/newPostPage/newPostPage";
 import { listPageLoader, profilePageLoader, singlePageLoader, listingsPageLoader } from "./lib/loaders";
 import UpdatePost from "./routes/updatePost/UpdatePost";
 import PaymentDemo from "./routes/paymentDemo/paymentDemo";
+import PricingPage from "./routes/pricingPage/pricingPage";
 
 
 function App() {
@@ -43,6 +44,10 @@ function App() {
         {
           path: "/payment-demo",
           element: <PaymentDemo />
+        },
+        {
+          path: "/pricing",
+          element: <PricingPage />
         },
         {
           path: "/:id",

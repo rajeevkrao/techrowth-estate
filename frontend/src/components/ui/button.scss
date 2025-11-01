@@ -5,4 +5,10 @@
     text-align: center;
     cursor: pointer;
     color: white;
+    transition: all 0.3s ease; // Added transition here for smooth in/out
+    transform: scale(1); // Base scale state
+}
+
+.hover-anim:hover {
+    transform: scale(1.05); // Removed quotes for valid syntax
 }
