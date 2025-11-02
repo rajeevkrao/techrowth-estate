@@ -1,16 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import "./payment.scss";
 import Button from "../../components/ui/button";
 import apiRequest from "../../lib/apiRequest";
 import toast from "react-hot-toast";
+import { AuthContext } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Payment() {
-
   const [loading, setLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState('');
+  const [packages, setPackages] = useState([]);
+  const [credits, setCredits] = useState(0);
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch credit packages
+    const fetchPackages = async () => {
+      try {
+        const res = await apiRequest.get('/payment/packages');
+        setPackages(res.data.packages);
+      } catch (error) {
+        console.error('Error fetching packages:', error);
+        toast.error('Failed to load pricing plans');
+      }
+    };
+
+    // Fetch user credits if logged in
+    const fetchCredits = async () => {
+      if (currentUser) {
+        try {
+          const res = await apiRequest.get('/users/credits');
+          setCredits(res.data.credits);
+        } catch (error) {
+          console.error('Error fetching credits:', error);
+        }
+      }
+    };
+
+    fetchPackages();
+    fetchCredits();
+  }, [currentUser]);
 
   const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       script.onload = () => resolve(true);
@@ -19,7 +52,14 @@ function Payment() {
     });
   };
 
-  const handlePayment = async (amount) => {
+  const handlePayment = async (packageName) => {
+    // Check if user is logged in
+    if (!currentUser) {
+      toast.error('Please login to purchase credits');
+      navigate('/login');
+      return;
+    }
+
     try {
       setLoading(true);
       setPaymentStatus('');
@@ -27,18 +67,17 @@ function Payment() {
       // Load Razorpay script
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
-        alert('Failed to load Razorpay SDK. Please check your internet connection.');
+        toast.error('Failed to load Razorpay SDK. Please check your internet connection.');
         setLoading(false);
         return;
       }
 
       // Create order
       const orderResponse = await apiRequest.post('/payment/create-order', {
-        amount,
-        currency: 'INR'
+        packageName
       });
 
-      const { order, key_id } = orderResponse.data;
+      const { order, key_id, credits: creditsAmount, packageName: pkgName } = orderResponse.data;
 
       // Configure Razorpay options
       const options = {
@@ -46,7 +85,7 @@ function Payment() {
         amount: order.amount,
         currency: order.currency,
         name: 'Techrowth Estate',
-        description: 'Test Payment',
+        description: `${pkgName} Plan - ${creditsAmount} Credits`,
         order_id: order.id,
         handler: async function (response) {
           try {
@@ -59,20 +98,24 @@ function Payment() {
 
             if (verifyResponse.data.success) {
               setPaymentStatus('success');
-              toast.success('Payment Successful! Payment ID: ' + response.razorpay_payment_id);
+              setCredits(verifyResponse.data.newBalance);
+              toast.success(`Payment Successful! ${verifyResponse.data.creditsAdded} credits added. New balance: ${verifyResponse.data.newBalance}`);
+              setTimeout(() => {
+                navigate('/profile');
+              }, 2000);
             } else {
               setPaymentStatus('failed');
-              toast.success('Payment verification failed!');
+              toast.error('Payment verification failed!');
             }
           } catch (error) {
             console.error('Verification error:', error);
             setPaymentStatus('failed');
-            toast.success('Payment verification failed!');
+            toast.error('Payment verification failed!');
           }
         },
         prefill: {
-          name: 'Test User',
-          email: 'test@example.com',
+          name: currentUser?.username || 'User',
+          email: currentUser?.email || '',
           contact: '9999999999'
         },
         theme: {
@@ -93,46 +136,51 @@ function Payment() {
       console.error('Payment error:', error);
       setLoading(false);
       setPaymentStatus('failed');
-      alert('Failed to initiate payment. Please try again.');
+      toast.error(error.response?.data?.message || 'Failed to initiate payment. Please try again.');
     }
   };
 
   return (
     <div className="payment">
       <div className="paymentContainer">
+        {currentUser && (
+          <div className="creditsInfo">
+            <h3>Your Current Balance: <span className="credits">{credits} Credits</span></h3>
+            <p>1 Credit = 1 Property Listing for 30 days</p>
+          </div>
+        )}
         <h1>Choose Your Plan</h1>
         <div className="plans">
-          <div className="plan">
-            <h2>Basic</h2>
-            <h3>₹500/month</h3>
-            <ul>
-              <li>10 Property Listings</li>
-              <li>5 Agent Profiles</li>
-              <li>Basic Support</li>
-            </ul>
-            <Button onClick={() => handlePayment(500)}>Choose Plan</Button>
-          </div>
-          <div className="plan">
-            <h2>Pro</h2>
-            <h3>₹1000/month</h3>
-            <ul>
-              <li>50 Property Listings</li>
-              <li>25 Agent Profiles</li>
-              <li>Priority Support</li>
-            </ul>
-            <Button>Choose Plan</Button>
-          </div>
-          <div className="plan">
-            <h2>Premium</h2>
-            <h3>₹2000/month</h3>
-            <ul>
-              <li>Unlimited Property Listings</li>
-              <li>Unlimited Agent Profiles</li>
-              <li>24/7 Support</li>
-            </ul>
-            <Button>Choose Plan</Button>
-          </div>
+          {packages.length > 0 ? (
+            packages.map((pkg) => (
+              <div key={pkg.id} className={`plan ${pkg.name === 'Pro' ? 'popular' : ''}`}>
+                {pkg.name === 'Pro' && <div className="badge">Most Popular</div>}
+                <h2>{pkg.name}</h2>
+                <h3>₹{pkg.price / 100}</h3>
+                <div className="creditsAmount">{pkg.credits} Credits</div>
+                <ul>
+                  <li>{pkg.credits} Property Listings</li>
+                  <li>30 Days Duration per Listing</li>
+                  <li>{pkg.description}</li>
+                  <li>₹{(pkg.price / 100 / pkg.credits).toFixed(2)} per listing</li>
+                </ul>
+                <Button
+                  onClick={() => handlePayment(pkg.name)}
+                  disabled={loading}
+                >
+                  {loading ? 'Processing...' : 'Buy Now'}
+                </Button>
+              </div>
+            ))
+          ) : (
+            <p>Loading plans...</p>
+          )}
         </div>
+        {!currentUser && (
+          <div className="loginPrompt">
+            <p>Please <button onClick={() => navigate('/login')}>login</button> to purchase credits</p>
+          </div>
+        )}
       </div>
     </div>
   );

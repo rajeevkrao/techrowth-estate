@@ -1,22 +1,37 @@
 import "./singlePage.scss";
 import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
+import Card from "../../components/card/Card";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import DOMPurify from "dompurify";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import {AuthContext} from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
+import toast from "react-hot-toast";
 
 function SinglePage() {
   const post = useLoaderData();
 
   const [saved, setSaved] = useState(post.isSaved);
+  const [similarPosts, setSimilarPosts] = useState([]);
+  const [loadingSimilar, setLoadingSimilar] = useState(true);
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
-  console.log(currentUser.id)
-  console.log(post)
-  console.log(post.user.id)
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchSimilarPosts();
+  }, [post.id]);
+
+  const fetchSimilarPosts = async () => {
+    try {
+      const res = await apiRequest.get(`/posts/${post.id}/similar`);
+      setSimilarPosts(res.data || []);
+    } catch (error) {
+      console.error('Error fetching similar posts:', error);
+    } finally {
+      setLoadingSimilar(false);
+    }
+  };
 
   const handleSave = async () => {
     if (!currentUser) {
@@ -29,6 +44,42 @@ function SinglePage() {
     } catch (err) {
       console.log(err);
       setSaved((prev) => !prev);
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (!currentUser) {
+      toast.error('Please login to send a message');
+      navigate("/login");
+      return;
+    }
+
+    if (currentUser.id === post.userId) {
+      toast.error('You cannot message yourself');
+      return;
+    }
+
+    try {
+      // Check if chat already exists with this user
+      const res = await apiRequest.get('/chats');
+      const existingChat = res.data.find(chat =>
+        chat.userIDs.includes(post.userId) && chat.userIDs.includes(currentUser.id)
+      );
+
+      if (existingChat) {
+        // Navigate to existing chat
+        navigate('/profile');
+      } else {
+        // Create new chat
+        await apiRequest.post('/chats', {
+          receiverId: post.userId
+        });
+        toast.success('Chat created! Check your messages.');
+        navigate('/profile');
+      }
+    } catch (error) {
+      console.error('Error creating chat:', error);
+      toast.error('Failed to send message. Please try again.');
     }
   };
 
@@ -65,10 +116,13 @@ function SinglePage() {
                   <img src="/pin.png" alt="" />
                   <span>{post.address}</span>
                 </div>
-                <div className="price">$ {post.price}</div>
+                <div className="price">₹ {post.price.toLocaleString()}</div>
+                <div className="viewCount">
+                  <span>👁️ {post.viewCount || 0} views</span>
+                </div>
               </div>
               <div className="user">
-                <img src={post.user.avatar} alt="" />
+                <img src={post.user.avatar || '/noavatar.jpg'} alt="" />
                 <span>{post.user.username}</span>
               </div>
             </div>
@@ -189,15 +243,33 @@ function SinglePage() {
             <Map items={[post]} />
           </div>
           <div className="buttons">
-            <button>
-              <img src="/chat.png" alt="" />
-              Send a Message
-            </button>
+            {currentUser && currentUser.id !== post.userId && (
+              <button onClick={handleSendMessage}>
+                <img src="/chat.png" alt="" />
+                Send a Message
+              </button>
+            )}
             <button onClick={handleSave} style={{backgroundColor: saved ? "#93C572" : "white"}}>
               <img src="/save.png" alt="" />
                {saved ? "Place Saved" : "Save the Place"}
             </button>
           </div>
+
+          {/* Similar Properties Section */}
+          {similarPosts.length > 0 && (
+            <div className="similarProperties">
+              <p className="title">Similar Properties</p>
+              <div className="similarList">
+                {loadingSimilar ? (
+                  <p>Loading similar properties...</p>
+                ) : (
+                  similarPosts.map(similarPost => (
+                    <Card key={similarPost.id} item={similarPost} />
+                  ))
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

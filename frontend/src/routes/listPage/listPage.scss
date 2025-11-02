@@ -13,11 +13,152 @@
       padding-right: 50px;
       display: flex;
       flex-direction: column;
-      gap: 50px;
+      gap: 30px;
       overflow-y: scroll;
       padding-bottom: 50px;
+
+      @include md {
+        padding-right: 20px;
+      }
+
+      @include sm {
+        padding-right: 0;
+      }
+
+      .listHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+        @include sm {
+          flex-direction: column;
+          gap: 15px;
+          align-items: flex-start;
+        }
+
+        .resultsInfo {
+          font-weight: 500;
+          color: #666;
+
+          span {
+            font-size: 15px;
+          }
+        }
+
+        .sortControl {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          @include sm {
+            width: 100%;
+          }
+
+          label {
+            font-weight: 500;
+            color: #666;
+            font-size: 14px;
+          }
+
+          select {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            min-width: 180px;
+
+            @include sm {
+              flex: 1;
+            }
+
+            &:focus {
+              outline: none;
+              border-color: #fece51;
+            }
+          }
+        }
+      }
+
+      .loading, .noResults {
+        text-align: center;
+        padding: 40px 20px;
+        color: #666;
+        font-size: 16px;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 30px;
+        padding: 20px;
+
+        @include sm {
+          flex-wrap: wrap;
+        }
+
+        .pageBtn {
+          padding: 10px 16px;
+          border: 1px solid #ddd;
+          background: white;
+          border-radius: 6px;
+          cursor: pointer;
+          font-weight: 500;
+          font-size: 14px;
+          color: #666;
+          transition: all 0.3s ease;
+
+          @include sm {
+            padding: 8px 12px;
+            font-size: 13px;
+          }
+
+          &:hover:not(:disabled) {
+            background: #fece51;
+            color: white;
+            border-color: #fece51;
+          }
+
+          &.active {
+            background: #fece51;
+            color: white;
+            border-color: #fece51;
+          }
+
+          &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+          }
+        }
+
+        .pageNumbers {
+          display: flex;
+          gap: 5px;
+          align-items: center;
+
+          @include sm {
+            order: 3;
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
+          }
+
+          .ellipsis {
+            padding: 0 5px;
+            color: #999;
+          }
+        }
+      }
     }
   }
+
   .mapContainer {
     flex: 2;
     height: 100%;

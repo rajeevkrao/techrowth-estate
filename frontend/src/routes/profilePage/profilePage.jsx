@@ -1,4 +1,4 @@
-import { Suspense, useContext } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 import { Await, Link, useLoaderData, useNavigate } from "react-router-dom";
 import Chat from "../../components/chat/Chat";
 import List from "../../components/list/List";
@@ -10,8 +10,25 @@ import Button from "../../components/ui/button";
 function ProfilePage() {
   const data = useLoaderData();
   const { updateUser, currentUser } = useContext(AuthContext);
+  const [credits, setCredits] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCredits = async () => {
+      try {
+        const res = await apiRequest.get('/users/credits');
+        setCredits(res.data.credits);
+      } catch (error) {
+        console.error('Error fetching credits:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCredits();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -22,6 +39,7 @@ function ProfilePage() {
       console.log(error);
     }
   }
+
   return (
     <div className="profilePage">
       <div className="details">
@@ -33,6 +51,27 @@ function ProfilePage() {
               <Button to="/listings">My Listings</Button>
             </div>
           </div>
+
+          {/* Credits Display */}
+          <div className="creditsSection">
+            <div className="creditsCard">
+              <div className="creditsIcon">💳</div>
+              <div className="creditsInfo">
+                <h3>Available Credits</h3>
+                <div className="creditsAmount">
+                  {loading ? '...' : credits}
+                </div>
+                <p>1 Credit = 1 Property Listing</p>
+              </div>
+              <Button to="/pricing">Buy Credits</Button>
+            </div>
+            {credits < 3 && !loading && (
+              <div className="lowCreditsWarning">
+                ⚠️ Low credits! Purchase more to continue listing properties.
+              </div>
+            )}
+          </div>
+
           <div className="info">
             <span>
               Avatar:

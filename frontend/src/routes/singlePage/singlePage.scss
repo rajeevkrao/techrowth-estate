@@ -68,6 +68,21 @@
               font-size: 20px;
               font-weight: 300;
             }
+
+            .viewCount {
+              font-size: 14px;
+              color: #666;
+              padding: 5px 10px;
+              background: #f5f5f5;
+              border-radius: 5px;
+              width: max-content;
+
+              span {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              }
+            }
           }
           .user {
             display: flex;
@@ -194,20 +209,61 @@
       .buttons {
         display: flex;
         justify-content: space-between;
+        gap: 10px;
+
+        @include sm {
+          flex-direction: column;
+        }
 
         button {
           padding: 20px;
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 5px;
           background-color: white;
           border: 1px solid #93C572;
           border-radius: 5px;
           cursor: pointer;
+          transition: all 0.3s ease;
+
+          @include sm {
+            width: 100%;
+          }
+
+          &:hover {
+            background-color: #93C572;
+            color: white;
+          }
 
           img {
             width: 16px;
             height: 16px;
+          }
+        }
+      }
+
+      .similarProperties {
+        margin-top: 60px;
+        padding-top: 40px;
+        border-top: 2px solid #f0f0f0;
+
+        .title {
+          font-size: 24px;
+          font-weight: 600;
+          margin-bottom: 30px;
+          color: #333;
+        }
+
+        .similarList {
+          display: flex;
+          flex-direction: column;
+          gap: 30px;
+
+          p {
+            color: #666;
+            text-align: center;
+            padding: 20px;
           }
         }
       }

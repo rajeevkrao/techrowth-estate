@@ -1,16 +1,291 @@
-.title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+@import "../../responsive.scss";
 
-    h1 {
-        font-weight: 300;
+.listingsPage {
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    @include md {
+        padding: 20px;
     }
 
-    button {
-        padding: 12px 24px;
-        background-color: #93C572;
-        cursor: pointer;
-        border: none;
+    @include sm {
+        padding: 15px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f0f0f0;
+
+        @include sm {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+
+            @include md {
+                font-size: 26px;
+            }
+
+            @include sm {
+                font-size: 22px;
+            }
+        }
+
+        .actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+
+            @include sm {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .creditsDisplay {
+                background: linear-gradient(135deg, #fece51 0%, #ffa800 100%);
+                padding: 10px 20px;
+                border-radius: 20px;
+                color: white;
+                font-weight: 600;
+
+                strong {
+                    font-size: 20px;
+                    margin-left: 5px;
+                }
+            }
+        }
+    }
+
+    .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #f0f0f0;
+        overflow-x: auto;
+
+        @include sm {
+            gap: 5px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+
+            @include sm {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            &:hover {
+                color: #fece51;
+            }
+
+            &.active {
+                color: #fece51;
+                border-bottom-color: #fece51;
+            }
+        }
+    }
+
+    .listings {
+        .emptyState {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+
+            p {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+        }
+
+        .postGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+
+            @include md {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+
+            @include sm {
+                grid-template-columns: 1fr;
+            }
+
+            .postCard {
+                background: white;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+                &:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+                }
+
+                .imageContainer {
+                    position: relative;
+                    height: 200px;
+                    overflow: hidden;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+                    .badge {
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        padding: 5px 12px;
+                        border-radius: 15px;
+                        font-size: 12px;
+                        font-weight: 600;
+
+                        &.featured {
+                            background: #fece51;
+                            color: white;
+                        }
+
+                        &.expired {
+                            background: #dc3545;
+                            color: white;
+                        }
+                    }
+                }
+
+                .details {
+                    padding: 15px;
+
+                    h3 {
+                        font-size: 18px;
+                        margin-bottom: 10px;
+                        color: #333;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    .address {
+                        font-size: 14px;
+                        color: #666;
+                        margin-bottom: 8px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    .price {
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: #fece51;
+                        margin-bottom: 10px;
+                    }
+
+                    .stats {
+                        display: flex;
+                        gap: 15px;
+                        margin-bottom: 10px;
+
+                        span {
+                            font-size: 13px;
+                            color: #666;
+                        }
+                    }
+
+                    .expiration {
+                        font-size: 13px;
+                        color: #856404;
+                        background: #fff3cd;
+                        padding: 5px 10px;
+                        border-radius: 6px;
+                        display: inline-block;
+                    }
+                }
+
+                .actions {
+                    padding: 15px;
+                    display: flex;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                    border-top: 1px solid #f0f0f0;
+
+                    button {
+                        flex: 1;
+                        min-width: 70px;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        border: none;
+                        font-size: 13px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+
+                        &:disabled {
+                            opacity: 0.5;
+                            cursor: not-allowed;
+                        }
+
+                        &.publishBtn, &.renewBtn {
+                            background: linear-gradient(135deg, #fece51 0%, #ffa800 100%);
+                            color: white;
+                            flex: 100%;
+
+                            &:hover:not(:disabled) {
+                                transform: translateY(-2px);
+                                box-shadow: 0 4px 8px rgba(254, 206, 81, 0.3);
+                            }
+                        }
+
+                        &.viewBtn {
+                            background: #007bff;
+                            color: white;
+
+                            &:hover {
+                                background: #0056b3;
+                            }
+                        }
+
+                        &.editBtn {
+                            background: #28a745;
+                            color: white;
+
+                            &:hover {
+                                background: #218838;
+                            }
+                        }
+
+                        &.deleteBtn {
+                            background: #dc3545;
+                            color: white;
+
+                            &:hover {
+                                background: #c82333;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

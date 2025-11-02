@@ -1,13 +1,138 @@
+@import "../../responsive.scss";
+
 .newPostPage {
   height: 100%;
   display: flex;
+  position: relative;
+
+  @include md {
+    flex-direction: column;
+  }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    .modalContent {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      max-width: 500px;
+      text-align: center;
+
+      h2 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      p {
+        margin-bottom: 15px;
+        color: #666;
+
+        strong {
+          color: #fece51;
+          font-size: 20px;
+        }
+      }
+
+      .modalButtons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 25px;
+
+        .cancelBtn {
+          padding: 12px 24px;
+          border: 2px solid #ddd;
+          background: white;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: 600;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: #f5f5f5;
+          }
+        }
+      }
+    }
+  }
 
   .formContainer {
     flex: 3;
     overflow: auto;
+    padding: 20px;
+
+    @include md {
+      padding: 15px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+
+      @include sm {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+      }
+
+      h1 {
+        font-size: 32px;
+        color: #333;
+
+        @include md {
+          font-size: 26px;
+        }
+
+        @include sm {
+          font-size: 22px;
+        }
+      }
+
+      .creditsDisplay {
+        background: linear-gradient(135deg, #fece51 0%, #ffa800 100%);
+        padding: 12px 24px;
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 2px 8px rgba(254, 206, 81, 0.3);
+
+        .creditsLabel {
+          color: white;
+          font-weight: 500;
+        }
+
+        .creditsValue {
+          background: white;
+          color: #fece51;
+          padding: 4px 16px;
+          border-radius: 15px;
+          font-weight: bold;
+          font-size: 18px;
+        }
+      }
+    }
 
     .wrapper {
       margin: 30px 50px 100px 0px;
+
+      @include md {
+        margin: 20px 0 50px 0;
+      }
 
       form {
         display: flex;
@@ -21,16 +146,39 @@
           flex-direction: column;
           gap: 5px;
 
-          label {}
+          label {
+            font-weight: 500;
+            color: #333;
+          }
 
           input {
             padding: 20px;
             border-radius: 5px;
-            border: 1px solid gray;
+            border: 1px solid #ddd;
+
+            @include sm {
+              padding: 15px;
+            }
+
+            &:focus {
+              outline: none;
+              border-color: #fece51;
+            }
           }
 
           select {
             padding: 19px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+
+            @include sm {
+              padding: 15px;
+            }
+
+            &:focus {
+              outline: none;
+              border-color: #fece51;
+            }
           }
 
           &.description {
@@ -44,14 +192,86 @@
           }
         }
 
-        .sendButton {
-          width: 30%;
-          border-radius: 5px;
-          border: none;
-          background-color: teal;
-          color: white;
-          font-weight: bold;
-          cursor: pointer;
+        .submitButtons {
+          width: 100%;
+          display: flex;
+          gap: 15px;
+          margin-top: 20px;
+
+          @include sm {
+            flex-direction: column;
+          }
+
+          button {
+            flex: 1;
+            padding: 16px 32px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            @include sm {
+              width: 100%;
+            }
+
+            &:disabled {
+              opacity: 0.6;
+              cursor: not-allowed;
+            }
+          }
+
+          .draftBtn {
+            background: white;
+            color: #666;
+            border: 2px solid #ddd;
+
+            &:hover:not(:disabled) {
+              background: #f5f5f5;
+              border-color: #999;
+            }
+          }
+
+          .publishBtn {
+            background: linear-gradient(135deg, #fece51 0%, #ffa800 100%);
+            color: white;
+
+            &:hover:not(:disabled) {
+              transform: translateY(-2px);
+              box-shadow: 0 4px 12px rgba(254, 206, 81, 0.4);
+            }
+          }
+        }
+
+        .creditWarning {
+          width: 100%;
+          background: #fff3cd;
+          color: #856404;
+          padding: 15px;
+          border-radius: 8px;
+          border: 1px solid #ffeaa7;
+          margin-top: 15px;
+
+          a {
+            color: #fece51;
+            font-weight: 600;
+            text-decoration: underline;
+
+            &:hover {
+              color: #ffa800;
+            }
+          }
+        }
+
+        .errorMessage {
+          width: 100%;
+          background: #f8d7da;
+          color: #721c24;
+          padding: 15px;
+          border-radius: 8px;
+          border: 1px solid #f5c6cb;
+          margin-top: 15px;
         }
       }
     }
@@ -59,25 +279,68 @@
 
 
   .sideContainer {
-
     flex: 2;
     display: flex;
     flex-direction: column;
     background-color: #fcf5f3;
+    padding: 20px;
+
+    @include md {
+      padding: 15px;
+    }
+
+    .imageInfo {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+
+      h3 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 20px;
+      }
+
+      p {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .imageNote {
+        background: #fef7e5;
+        padding: 10px;
+        border-radius: 5px;
+        color: #856404;
+        margin-top: 10px;
+      }
+    }
 
     .images {
       display: flex;
       flex: 3;
       overflow-y: auto;
-      // flex-direction: column;
+      flex-wrap: wrap;
       gap: 20px;
       align-items: center;
+      padding: 20px 0;
 
       img {
-        width: 50%;
+        width: 45%;
         height: 180px;
         object-fit: cover;
         border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+        @include md {
+          width: 48%;
+        }
+
+        @include sm {
+          width: 100%;
+          height: 200px;
+        }
       }
     }
   }

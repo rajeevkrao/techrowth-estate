@@ -10,6 +10,8 @@ import userRoute from './routes/user.route.js';
 import chatRoute from './routes/chat.route.js';
 import messageRoute from './routes/message.route.js';
 import paymentRoute from './routes/payment.route.js';
+import adminRoute from './routes/admin.route.js';
+import { schedulePropertyExpiration } from './cron/propertyExpiration.js';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -46,6 +48,11 @@ app.use("/api/messages", messageRoute);
 
 app.use("/api/payment", paymentRoute);
 
+app.use("/api/admin", adminRoute);
+
 app.listen(8800, () => {
     console.log('Server is running on port 8800');
+
+    // Start the property expiration cron job
+    schedulePropertyExpiration();
 })

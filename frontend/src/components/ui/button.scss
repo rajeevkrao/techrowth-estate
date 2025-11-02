@@ -1,3 +1,5 @@
+@import "../../responsive.scss";
+
 .button {
     all: unset;
     background-color: #93c572;
@@ -5,10 +7,18 @@
     text-align: center;
     cursor: pointer;
     color: white;
-    transition: all 0.3s ease; // Added transition here for smooth in/out
-    transform: scale(1); // Base scale state
+    transition: all 0.3s ease;
+    transform: scale(1);
+    border-radius: 4px;
+    font-weight: 500;
+    white-space: nowrap;
+
+    @include sm {
+        padding: 0.8rem;
+        font-size: 14px;
+    }
 }
 
 .hover-anim:hover {
-    transform: scale(1.05); // Removed quotes for valid syntax
+    transform: scale(1.05);
 }

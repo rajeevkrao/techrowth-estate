@@ -29,7 +29,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        
+
         .buttons {
           display: flex;
           gap: 20px;
@@ -44,6 +44,78 @@
           background-color: #93C572;
           cursor: pointer;
           border: none;
+        }
+      }
+
+      .creditsSection {
+        margin: 30px 0;
+
+        .creditsCard {
+          background: linear-gradient(135deg, #fece51 0%, #ffa800 100%);
+          padding: 30px;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          box-shadow: 0 4px 15px rgba(254, 206, 81, 0.3);
+
+          @include md {
+            flex-direction: column;
+            text-align: center;
+          }
+
+          .creditsIcon {
+            font-size: 48px;
+            min-width: 60px;
+          }
+
+          .creditsInfo {
+            flex: 1;
+            color: white;
+
+            h3 {
+              font-size: 18px;
+              font-weight: 500;
+              margin-bottom: 8px;
+              opacity: 0.95;
+            }
+
+            .creditsAmount {
+              font-size: 42px;
+              font-weight: bold;
+              margin-bottom: 4px;
+            }
+
+            p {
+              font-size: 14px;
+              opacity: 0.9;
+            }
+          }
+
+          button, a {
+            background: white;
+            color: #fece51;
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+
+            &:hover {
+              transform: translateY(-2px);
+            }
+          }
+        }
+
+        .lowCreditsWarning {
+          background: #fff3cd;
+          color: #856404;
+          padding: 15px;
+          border-radius: 8px;
+          margin-top: 15px;
+          border: 1px solid #ffeaa7;
+          font-weight: 500;
         }
       }
 

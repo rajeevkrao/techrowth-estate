@@ -20,8 +20,8 @@ function HomePage() {
             Discover your perfect home with ease. Browse thousands of properties, connect directly with sellers, and find the place you've been dreaming of. Start your journey to homeownership today.
           </p>
           <SearchBar />
-          <div class="property-owner">
-            <div class="text">Are you a property owner?</div>
+          <div className="property-owner">
+            <div className="text">Are you a property owner?</div>
             <Button onHoverAnim to="/listings">Post Free Property Ad</Button>
           </div>
           <div className="boxes">

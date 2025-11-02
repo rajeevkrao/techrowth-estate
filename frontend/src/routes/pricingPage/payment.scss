@@ -1,48 +1,199 @@
+@import "../../responsive.scss";
+
 .payment {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  min-height: 100vh;
+  padding: 40px 20px;
 
   .paymentContainer {
-    width: 80%;
+    width: 90%;
     max-width: 1200px;
     text-align: center;
+
+    .creditsInfo {
+      background: linear-gradient(135deg, #fece51 0%, #ffa800 100%);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+      h3 {
+        font-size: 24px;
+        margin-bottom: 10px;
+
+        .credits {
+          font-weight: bold;
+          font-size: 32px;
+        }
+      }
+
+      p {
+        font-size: 14px;
+        opacity: 0.95;
+      }
+    }
 
     h1 {
       font-size: 48px;
       margin-bottom: 50px;
+
+      @include md {
+        font-size: 36px;
+        margin-bottom: 30px;
+      }
+
+      @include sm {
+        font-size: 28px;
+        margin-bottom: 20px;
+      }
     }
 
     .plans {
       display: flex;
       justify-content: space-around;
-      gap: 20px;
+      gap: 30px;
+      flex-wrap: wrap;
+
+      @include md {
+        gap: 20px;
+      }
+
+      @include sm {
+        flex-direction: column;
+        align-items: center;
+      }
 
       .plan {
-        background-color: #f9f9f9;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        flex: 0 0 33.333%;
+        background-color: #ffffff;
+        padding: 40px 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        min-width: 280px;
+        max-width: 350px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        border: 2px solid transparent;
+
+        &:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        &.popular {
+          border-color: #fece51;
+
+          .badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #fece51;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+          }
+        }
+
+        @include sm {
+          width: 100%;
+          max-width: 100%;
+        }
 
         h2 {
-          font-size: 36px;
-          margin-bottom: 20px;
+          font-size: 32px;
+          margin-bottom: 15px;
+          color: #333;
+
+          @include sm {
+            font-size: 28px;
+          }
         }
 
         h3 {
-          font-size: 24px;
+          font-size: 36px;
+          margin-bottom: 10px;
+          color: #fece51;
+          font-weight: bold;
+
+          @include sm {
+            font-size: 28px;
+          }
+        }
+
+        .creditsAmount {
+          font-size: 20px;
+          font-weight: 600;
+          color: #666;
           margin-bottom: 20px;
+          padding: 10px;
+          background: #f8f8f8;
+          border-radius: 8px;
         }
 
         ul {
           list-style: none;
           padding: 0;
           margin-bottom: 30px;
+          text-align: left;
 
           li {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+            color: #555;
+            font-size: 15px;
+
+            &::before {
+              content: "✓";
+              position: absolute;
+              left: 0;
+              color: #fece51;
+              font-weight: bold;
+            }
+          }
+        }
+
+        button {
+          width: 100%;
+          padding: 15px;
+          font-size: 16px;
+          font-weight: 600;
+          transition: all 0.3s ease;
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+
+    .loginPrompt {
+      margin-top: 40px;
+      padding: 20px;
+      background: #f8f8f8;
+      border-radius: 12px;
+
+      p {
+        font-size: 16px;
+        color: #666;
+
+        button {
+          background: none;
+          border: none;
+          color: #fece51;
+          text-decoration: underline;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: 600;
+
+          &:hover {
+            color: #ffa800;
           }
         }
       }

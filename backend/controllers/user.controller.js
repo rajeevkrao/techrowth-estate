@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma.js";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
+import { getCreditBalance, getCreditTransactions } from "../utils/creditHelpers.js";
 
 export const getUsers = async (req, res) => {
     try {
@@ -161,5 +162,44 @@ export const getNotificationNumber = async (req, res) => {
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: "Failed to get profile posts!" });
+    }
+};
+
+
+export const getUserCredits = async (req, res) => {
+    const tokenUserId = req.userId;
+    try {
+        const balance = await getCreditBalance(tokenUserId);
+        res.status(200).json({ credits: balance });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Failed to get credit balance!" });
+    }
+};
+
+
+export const getUserCreditTransactions = async (req, res) => {
+    const tokenUserId = req.userId;
+    const { page = 1, limit = 10 } = req.query;
+
+    try {
+        const { transactions, total } = await getCreditTransactions(
+            tokenUserId,
+            parseInt(page),
+            parseInt(limit)
+        );
+
+        res.status(200).json({
+            transactions,
+            pagination: {
+                page: parseInt(page),
+                limit: parseInt(limit),
+                total,
+                totalPages: Math.ceil(total / limit)
+            }
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Failed to get credit transactions!" });
     }
 };

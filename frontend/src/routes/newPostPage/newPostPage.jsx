@@ -1,24 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./newPostPage.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import UploadWidget from "../../components/uploadWidget/UploadWidget";
 import { useNavigate } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest";
+import toast from "react-hot-toast";
 
 import Button from "../../components/ui/button";
 
 function NewPostPage() {
   const [value, setValue] = useState('');
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([
+    '/house1.jpg',
+    '/house2.jpg',
+    '/house3.jpg'
+  ]); // Default placeholder images
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [credits, setCredits] = useState(0);
+  const [showCreditModal, setShowCreditModal] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    // Fetch user credits
+    const fetchCredits = async () => {
+      try {
+        const res = await apiRequest.get('/users/credits');
+        setCredits(res.data.credits);
+      } catch (error) {
+        console.error('Error fetching credits:', error);
+      }
+    };
+
+    fetchCredits();
+  }, []);
+
+  const handleSubmit = async (e, publish = false) => {
     e.preventDefault();
+
+    // Check if publishing and user has no credits
+    if (publish && credits < 1) {
+      setShowCreditModal(true);
+      return;
+    }
+
     const formData = new FormData(e.target);
     const inputs = Object.fromEntries(formData);
+
+    setLoading(true);
+    setError("");
 
     try {
       const res = await apiRequest.post("/posts/", {
@@ -44,22 +75,54 @@ function NewPostPage() {
           school: parseInt(inputs.school),
           bus: parseInt(inputs.bus),
           restaurant: parseInt(inputs.restaurant)
-        }
+        },
+        publish: publish
       });
-      navigate("/" + res.data.id);
+
+      if (publish) {
+        toast.success(`Property published! ${res.data.creditsRemaining} credits remaining.`);
+        setCredits(res.data.creditsRemaining);
+      } else {
+        toast.success('Property saved as draft!');
+      }
+
+      navigate("/listings");
     } catch (err) {
       console.log(err);
-      // setError(err);
-      setError(error);
+      const errorMessage = err.response?.data?.message || "Failed to create post";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <div className="newPostPage">
+      {showCreditModal && (
+        <div className="modal">
+          <div className="modalContent">
+            <h2>Insufficient Credits</h2>
+            <p>You need at least 1 credit to publish a property listing.</p>
+            <p>Your current balance: <strong>{credits} credits</strong></p>
+            <div className="modalButtons">
+              <Button onClick={() => navigate('/pricing')}>Buy Credits</Button>
+              <button onClick={() => setShowCreditModal(false)} className="cancelBtn">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="formContainer">
-        <h1 style={{ textAlign: "center", margin: " 0  auto" }}>Add New Post</h1>
+        <div className="header">
+          <h1>Add New Property</h1>
+          <div className="creditsDisplay">
+            <span className="creditsLabel">Your Credits:</span>
+            <span className="creditsValue">{credits}</span>
+          </div>
+        </div>
         <div className="wrapper">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e) => e.preventDefault()}>
             <div className="item">
               <label htmlFor="title">Title</label>
               <input id="title" name="title" type="text" />
@@ -154,30 +217,47 @@ function NewPostPage() {
               <label htmlFor="restaurant">Restaurant</label>
               <input min={0} id="restaurant" name="restaurant" type="number" />
             </div>
-            <Button>Add</Button>
-            {/* {error && <span>{error}</span>} */}
-            {error && <span>error</span>}
+
+            <div className="submitButtons">
+              <button
+                type="button"
+                className="draftBtn"
+                onClick={(e) => handleSubmit(e, false)}
+                disabled={loading}
+              >
+                {loading ? 'Saving...' : 'Save as Draft'}
+              </button>
+              <button
+                type="button"
+                className="publishBtn"
+                onClick={(e) => handleSubmit(e, true)}
+                disabled={loading || credits < 1}
+              >
+                {loading ? 'Publishing...' : `Publish (1 Credit)`}
+              </button>
+            </div>
+
+            {credits < 1 && (
+              <div className="creditWarning">
+                ⚠️ You need at least 1 credit to publish. <a href="/pricing">Buy credits</a>
+              </div>
+            )}
+
+            {error && <div className="errorMessage">{error}</div>}
           </form>
         </div>
       </div>
       <div className="sideContainer">
-        <UploadWidget
-          uwConfig={{
-            cloudName: "dqslgf2fw",
-            uploadPreset: "real-estate-post-preset",
-            multiple: true,
-            folder: "real-estate-posts",
-            value: "dfdfd"
-          }}
-          setState={setImages}
-
-        >{images.length ? "Upload More" : "Upload"}
-        </UploadWidget>
-        <div className="images">{images.map((image, index) => (
-          <img src={image} key={index} alt="property-images" />
-        ))}</div>
-
-
+        <div className="imageInfo">
+          <h3>Property Images</h3>
+          <p>Default placeholder images will be used for your property listing.</p>
+          <p className="imageNote">📷 Using: house1.jpg, house2.jpg, house3.jpg</p>
+        </div>
+        <div className="images">
+          {images.map((image, index) => (
+            <img src={image} key={index} alt={`property-${index + 1}`} />
+          ))}
+        </div>
       </div>
     </div>
   );

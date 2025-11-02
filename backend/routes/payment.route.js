@@ -1,15 +1,24 @@
 import express from 'express';
-import { createOrder, verifyPayment, getPaymentDetails } from '../controllers/payment.controller.js';
+import {
+    createOrder,
+    verifyPayment,
+    getPaymentDetails,
+    getCreditPackages,
+    getTransactionHistory,
+    razorpayWebhook
+} from '../controllers/payment.controller.js';
+import verifyToken from '../middleware/verifyToken.js';
 
 const router = express.Router();
 
-// Create a new order
-router.post('/create-order', createOrder);
+// Public routes
+router.get('/packages', getCreditPackages);
+router.post('/webhook', razorpayWebhook);
 
-// Verify payment
-router.post('/verify-payment', verifyPayment);
-
-// Get payment details
-router.get('/payment/:paymentId', getPaymentDetails);
+// Protected routes (require authentication)
+router.post('/create-order', verifyToken, createOrder);
+router.post('/verify-payment', verifyToken, verifyPayment);
+router.get('/payment/:paymentId', verifyToken, getPaymentDetails);
+router.get('/transactions', verifyToken, getTransactionHistory);
 
 export default router;
